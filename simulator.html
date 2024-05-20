@@ -24,44 +24,36 @@
                 </div>
                 <label for="window1">Input C Code</label>
                 <textarea id="window1" rows="20" cols="50">
-                    #include <xc.h>
-                    #include <pic18f45k22.h>
+#include <xc.h>
+#include <pic18f45k22.h>
                     
-                    #pragma config FOSC = INTIO67, PLLCFG = OFF, PRICLKEN = ON,FCMEN = ON, PWRTEN = ON
-                    #pragma config BOREN = SBORDIS, BORV = 250, WDTEN = OFF, WDTPS = 4096, PBADEN = OFF
-                    #pragma config HFOFST = OFF, MCLRE = EXTMCLR, STVREN = ON, LVP = OFF, DEBUG = ON, CCP3MX = PORTE0
+#pragma config FOSC = INTIO67, PLLCFG = OFF, PRICLKEN = ON,FCMEN = ON, PWRTEN = ON
+#pragma config BOREN = SBORDIS, BORV = 250, WDTEN = OFF, WDTPS = 4096, PBADEN = OFF
+#pragma config HFOFST = OFF, MCLRE = EXTMCLR, STVREN = ON, LVP = OFF, DEBUG = ON, CCP3MX = PORTE0
                     
-                    unsigned char i;
+unsigned char i;
                     
-                    void DAC_A(unsigned char data) {
-                        PORTDbits.RD2 = 0;
-                        SSP2BUF = 0x10 | (data >> 4);
-                        while(!SSP2STATbits.BF);
-                        SSP2BUF = data << 4;
-                        while(!SSP2STATbits.BF);
-                        PORTDbits.RD2 = 1;
-                    }
-                    
-                    void main( void ) {
-                        OSCCON = 0x62;
-                        OSCTUNEbits.PLLEN=1;
+void main( void ) {
+    OSCCON = 0x62;
+    OSCTUNEbits.PLLEN=1;
                         
-                        TRISD = 0x02;
+    TRISD = 0x02;
                         
-                        SSP2STAT = 0xC0;
-                        SSP2CON1 = 0x21;
+    SSP2STAT = 0xC0;
+    SSP2CON1 = 0x21;
                         
-                        TRISA = 0x00;
+    TRISA = 0x00;
                         
-                        while (1) {
-                            for (i = 0; i < 32; i++) {
-                                DAC_A(i);
-                            }
-                            for (i = 31; i > 0; i--) {
-                                DAC_A(i);
-                            }
-                        }	
-                    }</textarea>
+    while (1) {
+        for (i = 0; i < 32; i++) {
+            DAC_A(i);
+        }
+        for (i = 31; i > 0; i--) {
+            DAC_A(i);
+        }
+    }	
+}
+                </textarea>
             </div>
             <div class="output-container">
                 <div class="button-container">
