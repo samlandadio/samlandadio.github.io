@@ -11,7 +11,6 @@
         <nav>
             <ul>
                 <li><a href="index.html">Home</a></li>
-                <li><a href="simulator.html">Simulator</a></li>
             </ul>
         </nav>
     </header>
@@ -24,7 +23,8 @@
                     <button id="button1">Compile</button>
                 </div>
                 <label for="window1">Input C Code</label>
-                <textarea id="window1" rows="20" cols="50">#include <xc.h>
+                <textarea id="window1" rows="20" cols="50">
+                    #include <xc.h>
                     #include <pic18f45k22.h>
                     
                     #pragma config FOSC = INTIO67, PLLCFG = OFF, PRICLKEN = ON,FCMEN = ON, PWRTEN = ON
