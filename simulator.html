@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulator</title>
+    <link rel="stylesheet" href="static/styles.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="simulator.html">Simulator</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section id="simulator">
+        <h2>PIC18 Simulator</h2>
+        <div class="simulator-container">
+            <div class="input-container">
+                <div class="button-container">
+                    <button id="button1">Compile</button>
+                </div>
+                <label for="window1">Input C Code</label>
+                <textarea id="window1" rows="20" cols="50">#include <xc.h>
+                    #include <pic18f45k22.h>
+                    
+                    #pragma config FOSC = INTIO67, PLLCFG = OFF, PRICLKEN = ON,FCMEN = ON, PWRTEN = ON
+                    #pragma config BOREN = SBORDIS, BORV = 250, WDTEN = OFF, WDTPS = 4096, PBADEN = OFF
+                    #pragma config HFOFST = OFF, MCLRE = EXTMCLR, STVREN = ON, LVP = OFF, DEBUG = ON, CCP3MX = PORTE0
+                    
+                    unsigned char i;
+                    
+                    void DAC_A(unsigned char data) {
+                        PORTDbits.RD2 = 0;
+                        SSP2BUF = 0x10 | (data >> 4);
+                        while(!SSP2STATbits.BF);
+                        SSP2BUF = data << 4;
+                        while(!SSP2STATbits.BF);
+                        PORTDbits.RD2 = 1;
+                    }
+                    
+                    void main( void ) {
+                        OSCCON = 0x62;
+                        OSCTUNEbits.PLLEN=1;
+                        
+                        TRISD = 0x02;
+                        
+                        SSP2STAT = 0xC0;
+                        SSP2CON1 = 0x21;
+                        
+                        TRISA = 0x00;
+                        
+                        while (1) {
+                            for (i = 0; i < 32; i++) {
+                                DAC_A(i);
+                            }
+                            for (i = 31; i > 0; i--) {
+                                DAC_A(i);
+                            }
+                        }	
+                    }</textarea>
+            </div>
+            <div class="output-container">
+                <div class="button-container">
+                    <button id="button2">Upload</button>
+                </div>
+                <label for="window2">Assumbly Code</label>
+                <textarea id="window2" rows="20" cols="50" readonly></textarea>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; slandadio</p>
+    </footer>
+
+    <script>
+        document.getElementById('button1').addEventListener('click', function() {
+            document.getElementById('window2').value = "Assembly Code:\n00068C  EF01  F003 goto\n000602  0E62 movlw\n98000604  6ED3 movwf\n000608 0E02 movlw\n00060A  6E95 movwf\n00060C  0EC0 movlw";
+        });
+
+        document.getElementById('button2').addEventListener('click', function() {
+            document.getElementById('window2').value = "";
+        });
+    </script>
+</body>
+    <img src="/static/cabin.jpg" alt="Cabin" width="600" height="400">
+</html>
